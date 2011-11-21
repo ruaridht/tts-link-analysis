@@ -195,17 +195,66 @@ def getGraphEdges():
   f.close()
   
   return graph
+  
+def getPeople():
+  print ">>> Loading graph.txt..."
+  graph = []
+  peeps = []
+  dupes = []
+  
+  # Read 10-20 important people
+  f = open('im_people.txt','r')
+  lines = f.readlines()
+  for line in lines:
+    l = string.split(line)
+    peeps.append(l[0])
+  f.close()
+  
+  # Read whole graph.txt
+  f = open('graph.txt','r')
+  lines = f.readlines()
+  for line in lines:
+    lineSplit = string.split(line)
+    p1 = lineSplit[1]
+    p2 = lineSplit[2]
+    # only add contact between important people
+    if (p1 in peeps):
+      if (p2 in peeps):
+        graph.append( (p1,p2) )
+  f.close()
+  
+  # reduce duplicates and count them
+  set_graph = list(set(graph))
+  for link in set_graph:
+    dupes.append(graph.count(link))
+  
+  # write to graph.dot to render
+  print ">>> Writing smaller graph"
+  f = open('graph.dot','w')
+  f.write("digraph G { \n")
+  for i in xrange(len(set_graph)):
+    (a,b) = set_graph[i]
+    a = a.replace('@enron.com','')
+    b = b.replace('@enron.com','')
+    out = "  \"" + a + "\" -> \"" + b + "\" [label = \"" + str(dupes[i]) + "\"]; " + "\n"
+    f.write(out)
+  f.write("}")
+  f.close()
+  print ">>> Done preparing graph.dot"
 
 def main():
   print ">>> Beginning Link Analysis"
   
+  getPeople()
+  
+  """
   edges = getGraphEdges()
   nodes = graphAsNodes(edges)
   
   anna = Analyser(nodes)
   anna.pagerank()
   anna.hubs_auth()
-  
+  """
   print ">>> Goodbye."
 
 if __name__ == "__main__":
