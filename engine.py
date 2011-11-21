@@ -245,16 +245,15 @@ def getPeople():
 def main():
   print ">>> Beginning Link Analysis"
   
-  getPeople()
+  #getPeople()
   
-  """
   edges = getGraphEdges()
   nodes = graphAsNodes(edges)
   
   anna = Analyser(nodes)
   anna.pagerank()
   anna.hubs_auth()
-  """
+  
   print ">>> Goodbye."
 
 if __name__ == "__main__":
